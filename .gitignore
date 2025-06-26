@@ -1,0 +1,288 @@
+# ========================================
+# AI Chatbot Project - Comprehensive .gitignore
+# ========================================
+
+# ====== ENVIRONMENT & CREDENTIALS ======
+# Never commit environment variables or API keys
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env*.local
+
+# API Keys and sensitive data
+**/api-keys.json
+**/credentials.json
+**/secrets.json
+config/secrets.js
+config/credentials.js
+
+# ====== DEPENDENCIES ======
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# ====== BUILD OUTPUTS ======
+# Next.js build outputs
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/dist/
+
+# Backend build outputs
+backend/dist/
+backend/build/
+
+# General build directories
+build/
+dist/
+public/build/
+
+# ====== CACHE DIRECTORIES ======
+# Next.js cache
+frontend/.next/cache/
+.next/cache/
+
+# Node.js cache
+.npm/
+.node_repl_history
+
+# Yarn cache
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# ESLint cache
+.eslintcache
+
+# Prettier cache
+.prettiercache
+
+# TypeScript cache
+*.tsbuildinfo
+
+# ====== LOGS ======
+# All log files
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# ====== TESTING ======
+# Jest
+coverage/
+.nyc_output/
+
+# Cypress
+cypress/videos/
+cypress/screenshots/
+
+# ====== OPERATING SYSTEM ======
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ====== EDITORS & IDEs ======
+# VSCode
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# WebStorm/IntelliJ
+.idea/
+*.swp
+*.swo
+*~
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+
+# ====== DEPLOYMENT ======
+# Vercel
+.vercel
+
+# Railway
+.railway/
+
+# Netlify
+.netlify/
+
+# Serverless Framework
+.serverless/
+
+# Docker
+Dockerfile.local
+docker-compose.override.yml
+
+# ====== TEMPORARY FILES ======
+# Temporary directories
+tmp/
+temp/
+.tmp/
+.temp/
+
+# Runtime data
+*.pid
+*.seed
+*.pid.lock
+
+# ====== DATABASE ======
+# SQLite
+*.sqlite
+*.sqlite3
+*.db
+
+# ====== UPLOADS & USER CONTENT ======
+# User uploaded files (if storing locally)
+uploads/
+user-uploads/
+static/uploads/
+
+# ====== MONITORING & ANALYTICS ======
+# Error tracking
+.sentry-*
+
+# Analytics
+.analytics/
+
+# ====== AI/ML SPECIFIC ======
+# Model files (if caching locally)
+models/
+*.pkl
+*.joblib
+*.h5
+*.pb
+
+# Training data
+training-data/
+datasets/
+
+# ====== PACKAGE MANAGERS ======
+# pnpm
+.pnpm-debug.log*
+.pnpm-store/
+
+# Rush
+common/temp/
+
+# ====== DOCUMENTATION ======
+# Auto-generated docs
+docs/generated/
+
+# ====== SECURITY ======
+# Certificate files
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+
+# SSH keys
+id_rsa
+id_rsa.pub
+*.ppk
+
+# ====== MISC ======
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional eslint cache
+.eslintcache
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# CUSTOM PROJECT FILES
+# Test files that shouldn't be committed
+test-*.js
+debug-*.js
+*.test.local.*
+
+# Local configuration overrides
+config.local.js
+settings.local.json
+
+# ========================================
+# END OF .gitignore
+# ========================================

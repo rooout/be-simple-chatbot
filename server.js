@@ -10,27 +10,42 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-// Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? 'https://your-domain.com' : 'http://localhost:3000',
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'https://localhost:3000',
+      'https://fe-simple-chatbot.vercel.app/',
+    ];
+    
+    if (!origin && process.env.NODE_ENV !== 'production') return callback(null, true);
+    
+    if (process.env.NODE_ENV !== 'production' && origin && origin.includes('localhost')) {
+      return callback(null, true);
+    }
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   message: 'Too many requests from this IP, please try again later.'
 });
 app.use('/api', limiter);
 
-// Multer configuration for image uploads
 const storage = multer.memoryStorage();
 const upload = multer({
   storage: storage,
@@ -46,7 +61,6 @@ const upload = multer({
   }
 });
 
-// Dummy material recommendations data
 const materialRecommendations = [
   {
     id: 1,
@@ -100,7 +114,6 @@ const materialRecommendations = [
   }
 ];
 
-// Helper function to get relevant recommendations based on message content
 function getRelevantRecommendations(message, limit = 3) {
   const keywords = message.toLowerCase().split(' ');
   const scored = materialRecommendations.map(material => {
@@ -122,7 +135,6 @@ function getRelevantRecommendations(message, limit = 3) {
     .slice(0, limit);
 }
 
-// Chat endpoint for text-only messages
 app.post('/api/chat', async (req, res) => {
   try {
     const { message, conversationHistory = [] } = req.body;
@@ -138,10 +150,8 @@ app.post('/api/chat', async (req, res) => {
       return res.status(500).json({ error: 'AI service not configured' });
     }
 
-    // Use standard model for text chat
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
     
-    // Build conversation context
     let prompt = `You are a helpful AI assistant. Be concise, accurate, and friendly in your responses.`;
     
     if (conversationHistory.length > 0) {
@@ -160,7 +170,6 @@ app.post('/api/chat', async (req, res) => {
 
     console.log('Received response from Gemini API:', aiResponse.substring(0, 100) + '...');
 
-    // Get relevant material recommendations
     const recommendations = getRelevantRecommendations(message);
 
     res.json({
@@ -176,7 +185,6 @@ app.post('/api/chat', async (req, res) => {
       name: error.name
     });
     
-    // More specific error messages
     if (error.message.includes('API_KEY')) {
       return res.status(500).json({ 
         error: 'AI service configuration error',
@@ -199,13 +207,11 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-// Chat endpoint for messages with images
 app.post('/api/chat/image', upload.single('image'), async (req, res) => {
   try {
     const { message } = req.body;
     const imageFile = req.file;
     
-    // Parse conversationHistory if it's a string
     let conversationHistory = [];
     if (req.body.conversationHistory) {
       try {
@@ -228,7 +234,6 @@ app.post('/api/chat/image', upload.single('image'), async (req, res) => {
       return res.status(400).json({ error: 'Message or image is required' });
     }
 
-    // Use standard model for image analysis (it supports multimodal)
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
     
     let prompt = `You are a helpful AI assistant. Analyze the image if provided and respond to the user's message. Be concise, accurate, and friendly.`;
@@ -262,7 +267,6 @@ app.post('/api/chat/image', upload.single('image'), async (req, res) => {
 
     console.log('Received image response from Gemini API:', aiResponse.substring(0, 100) + '...');
 
-    // Get relevant material recommendations
     const searchText = message || 'image analysis';
     const recommendations = getRelevantRecommendations(searchText);
 
@@ -279,7 +283,6 @@ app.post('/api/chat/image', upload.single('image'), async (req, res) => {
       name: error.name
     });
     
-    // More specific error messages
     if (error.message.includes('API_KEY')) {
       return res.status(500).json({ 
         error: 'AI service configuration error',
@@ -302,7 +305,6 @@ app.post('/api/chat/image', upload.single('image'), async (req, res) => {
   }
 });
 
-// Get all material recommendations
 app.get('/api/recommendations', (req, res) => {
   const { category, difficulty, limit = 10 } = req.query;
   
@@ -324,7 +326,6 @@ app.get('/api/recommendations', (req, res) => {
   });
 });
 
-// Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'OK', 
@@ -333,7 +334,6 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Error handling middleware
 app.use((error, req, res, next) => {
   if (error instanceof multer.MulterError) {
     if (error.code === 'LIMIT_FILE_SIZE') {
@@ -345,12 +345,10 @@ app.use((error, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-// 404 handler
 app.use('*', (req, res) => {
   res.status(404).json({ error: 'Endpoint not found' });
 });
 
-// Function to check if port is available
 const isPortAvailable = (port) => {
   return new Promise((resolve) => {
     const server = net.createServer();
@@ -366,9 +364,8 @@ const isPortAvailable = (port) => {
   });
 };
 
-// Start server with port checking
 const startServer = async () => {
-  const targetPort = port; // Use the port variable defined earlier
+  const targetPort = port;
   
   try {
     app.listen(targetPort, () => {

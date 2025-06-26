@@ -18,8 +18,14 @@ app.use(cors({
     const allowedOrigins = [
       'http://localhost:3000',
       'https://localhost:3000',
-      'https://fe-simple-chatbot.vercel.app/',
+      'https://fe-simple-chatbot.vercel.app',
+      'https://fe-simple-chatbot-git-main-routs-projects-75242813.vercel.app',
+      'https://fe-simple-chatbot-e4eo3f61k-routs-projects-75242813.vercel.app'
     ];
+    
+    const isVercelDomain = origin && (
+      origin.includes('fe-simple-chatbot') && origin.includes('vercel.app')
+    );
     
     if (!origin && process.env.NODE_ENV !== 'production') return callback(null, true);
     
@@ -27,7 +33,7 @@ app.use(cors({
       return callback(null, true);
     }
     
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    if (allowedOrigins.indexOf(origin) !== -1 || isVercelDomain) {
       callback(null, true);
     } else {
       console.log('CORS blocked origin:', origin);
@@ -50,7 +56,7 @@ const storage = multer.memoryStorage();
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB limit
+    fileSize: 5 * 1024 * 1024,
   },
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith('image/')) {

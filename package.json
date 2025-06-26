@@ -5,7 +5,14 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "echo 'Build completed'",
+    "railway:build": "npm install --omit=dev",
+    "railway:start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   },
   "dependencies": {
     "express": "^4.18.2",
@@ -18,5 +25,8 @@
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
-  }
+  },
+  "keywords": ["chatbot", "gemini", "api", "express"],
+  "author": "",
+  "license": "MIT"
 }
